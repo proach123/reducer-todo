@@ -1,26 +1,77 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import TodoForm from './components/TodoComponents/TodoForm'
+import TodoList from './components/TodoComponents/TodoList'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const list = [
+  {
+    task: 'Organize Garage',
+    id: 1528817077286,
+    completed: false
+  },
+  {
+    task: 'Bake Cookies',
+    id: 1528817084358,
+    completed: false
+  }
+];
+
+class App extends React.Component {
+
+ 
+  constructor(){
+    super()
+    this.state = {list:list}
+  }
+
+  addItem = itemName => {
+    const newItem = {
+      task: itemName,
+      id: Date.now(),
+      completed: false
+    };
+    this.setState({
+      list: [...this.state.list, newItem]
+    });
+  };
+
+  toggleId = id => {
+    const newList = this.state.list.map(item => {
+      if(item.id === id){
+      return {
+        ...item,
+        completed: !item.completed
+      }} else {return item
+      }
+    });
+
+    this.setState({
+      list: newList
+    })
+  }
+
+  clearCompleted = id => {
+    const filteredList = this.state.list.filter(item => {
+      return (!item.completed)
+    })
+  console.log(filteredList,'working')
+  
+  this.setState({list:filteredList})
+  }
+
+  render() {
+
+    return (
+      <div>
+        <div>
+        <h2>Welcome to your Todo App!</h2>
+        <TodoForm addItem={this.addItem} />
+        </div>
+
+        <TodoList list={this.state.list} toggleId={this.toggleId} clearCompleted={this.clearCompleted} />
+
+      </div>
+    );
+  }
 }
 
 export default App;
