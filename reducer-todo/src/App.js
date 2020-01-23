@@ -1,6 +1,7 @@
-import React from 'react';
-import TodoForm from './components/TodoComponents/TodoForm'
-import TodoList from './components/TodoComponents/TodoList'
+import React, { useReducer } from 'react';
+import TodoForm from './components/TodoForm'
+import TodoList from './components/TodoList'
+import { todoReducer, initialState } from './reducers/reducer';
 
 const list = [
   {
@@ -15,63 +16,13 @@ const list = [
   }
 ];
 
-class App extends React.Component {
-
- 
-  constructor(){
-    super()
-    this.state = {list:list}
-  }
-
-  addItem = itemName => {
-    const newItem = {
-      task: itemName,
-      id: Date.now(),
-      completed: false
-    };
-    this.setState({
-      list: [...this.state.list, newItem]
-    });
-  };
-
-  toggleId = id => {
-    const newList = this.state.list.map(item => {
-      if(item.id === id){
-      return {
-        ...item,
-        completed: !item.completed
-      }} else {return item
-      }
-    });
-
-    this.setState({
-      list: newList
-    })
-  }
-
-  clearCompleted = id => {
-    const filteredList = this.state.list.filter(item => {
-      return (!item.completed)
-    })
-  console.log(filteredList,'working')
-  
-  this.setState({list:filteredList})
-  }
-
-  render() {
-
-    return (
-      <div>
-        <div>
-        <h2>Welcome to your Todo App!</h2>
-        <TodoForm addItem={this.addItem} />
-        </div>
-
-        <TodoList list={this.state.list} toggleId={this.toggleId} clearCompleted={this.clearCompleted} />
-
-      </div>
-    );
-  }
+ const App = () =>{
+  const [state, dispatch] = useReducer(todoReducer, initialState)
+  return (
+    <div>
+      <TodoForm state = {state} dispatch= {dispatch}/>
+      <TodoList state = {state} dispatch= {dispatch}></TodoList>
+    </div>
+  )
 }
-
-export default App;
+export default App
